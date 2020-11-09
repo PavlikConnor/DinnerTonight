@@ -1,5 +1,5 @@
 # DinnerTonight
-This project will let users add their own recipes and allow the search of recipes from the ingredients they already have, saving the trip to the grocery store if possible.
+This project will attract users by giving them the ability to search for recipes based on the ingredients they already have at home, possibly saving a trip to the grocery store! It will entice them with mouth watering meal descriptions and images. Additionally, they can create their own profile full of saved menu options and leave reviews and comment for any future recipe search.
 
 ## Installation
 * First install python, pip. and docker.
