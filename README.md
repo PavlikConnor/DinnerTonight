@@ -28,7 +28,7 @@ exit
 
   - AC: allow users to rate, write reviews and like/dislike recipes in the database. Allow all user to view this.
 
-2. As an admin, I want to review flagged reviews for inappropriate or malicious content so that I can keep the site clean and user friendly.
+3. As an admin, I want to review flagged reviews for inappropriate or malicious content so that I can keep the site clean and user friendly.
 
   - AC: Allow admins to delete or make a review 'reviewed' if acceptable.
 
