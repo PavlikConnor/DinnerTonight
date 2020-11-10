@@ -61,7 +61,6 @@ class Register(APIView):
     def post(self, request, *args, **kwargs):
         # Login
         username = request.POST.get('username') #you need to apply validators to these
-        print username
         password = request.POST.get('password') #you need to apply validators to these
         email = request.POST.get('email') #you need to apply validators to these
         gender = request.POST.get('gender') #you need to apply validators to these
@@ -70,7 +69,6 @@ class Register(APIView):
         city = request.POST.get('city') #you need to apply validators to these
         state = request.POST.get('state') #you need to apply validators to these
 
-        print request.POST.get('username')
         if User.objects.filter(username=username).exists():
             return Response({'username': 'Username is taken.', 'status': 'error'})
         elif User.objects.filter(email=email).exists():
@@ -131,8 +129,8 @@ class Events(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request, *args, **kwargs):
-        print 'REQUEST DATA'
-        print str(request.data)
+        # print 'REQUEST DATA'
+        # print str(request.data)
 
         eventtype = request.data.get('eventtype')
         timestamp = int(request.data.get('timestamp'))
@@ -149,9 +147,9 @@ class Events(APIView):
         try:
             newEvent.clean_fields()
         except ValidationError as e:
-            print e
+            print(e)
             return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
 
         newEvent.save()
-        print 'New Event Logged from: ' + requestor
+        print ('New Event Logged from: ' + requestor)
         return Response({'success': True}, status=status.HTTP_200_OK)
