@@ -7,6 +7,7 @@ This project will attract users by giving them the ability to search for recipes
 
 ## Getting Started
 ```
+cd <path to backend directory>
 docker-compose build
 docker-compose up
 ```
