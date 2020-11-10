@@ -41,6 +41,15 @@ exit
 
   - Mitigation: Other users can flag reviews to be reviewed by admins where the comment/review is scanned for malicious wording or imaging.
 
+## Mockup
+![Example Screenshot](Diagrams/Mockup.png)
+## Architecture Diagrams
+  - Context
+    ![Example Screenshot](Diagrams/C4Context.png)
+  - Containers
+    ![Example Screenshot](Diagrams/C4Containers.png)
+  - Components
+    ![Example Screenshot](Diagrams/C4Components.png)
 # License
 MIT License
 
