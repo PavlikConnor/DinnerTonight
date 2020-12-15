@@ -1,0 +1,37 @@
+<Jumbo>
+  <h2>Welcome to Dinner Tonight!</h2>
+  <h3>Log in to manage recipes</h3>
+</Jumbo>
+<form class="form-horizontal" {{action "login" on="submit"}}>
+  <div class="control-group">
+    <div class="control-label">
+      <label>Username</label>
+    </div>
+
+    <div class="controls">
+      {{input value=auth.username type="text"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">
+      <label>Password</label>
+    </div>
+
+    <div class="controls">
+      {{input value=auth.password type="password"}}
+    </div>
+  </div>
+
+  <button type="submit" class="btn">Log in!</button>
+</form>
+<!-- <form {{on "submit" this.authenticate}}>
+  <label for="identification">Login</label>
+  <input id='identification' placeholder="Enter Login" value={{this.identification}} {{on "change" this.updateIdentification}}>
+  <label for="password">Password</label>
+  <input id='password' placeholder="Enter Password" value={{this.password}} {{on "change" this.updatePassword}}>
+  <button type="submit">Login</button>
+  {{#if this.errorMessage}}
+    <p>{{this.errorMessage}}</p>
+  {{/if}}
+</form> -->

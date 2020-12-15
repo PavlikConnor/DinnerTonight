@@ -1,0 +1,14 @@
+<Jumbo>
+  <h2>Welcome to Dinner Tonight!</h2>
+  <h3>We aim to make finding a recipe for dinner easy by searching by ingredients you already have, skipping a trip to the grocery store.</h3>
+  <!-- <LinkTo @route="index" class="button">Index</LinkTo> -->
+</Jumbo>
+
+<div class="recipe">
+  <ul class="results">
+    {{#each @model as |recipe|}}
+      <li><Recipe @recipe={{recipe}} /></li>
+    {{/each}}
+  </ul>
+
+</div>

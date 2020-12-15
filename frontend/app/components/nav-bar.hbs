@@ -1,0 +1,27 @@
+<nav class="menu">
+  <LinkTo @route="index" class="menu-index">
+    <h1>DinnerTonight</h1>
+  </LinkTo>
+  <div class="links">
+    <LinkTo @route="find" class="menu-find-dinner">
+      Find Dinner
+    </LinkTo>
+    <LinkTo @route="new" class="menu-new-dinner">
+      New Dinner
+    </LinkTo>
+    <!-- <LinkTo @route="login" class="menu-login">
+      Login
+    </LinkTo> -->
+    <!-- {{#if this.session.isAuthenticated}}
+    <a {{on "click" this.invalidateSession}}>Logout</a>
+    {{else}}
+      {{#link-to 'login'}}Login{{/link-to}}
+    {{/if}} -->
+    {{#if auth.isLoggedIn}}
+				<h2 style="color:lightgray">Logged in as: {{auth.username}} <a {{action "logout"}}>Logout</a></h2>
+		{{else}}
+				{{#link-to 'login'}}Login{{/link-to}}
+		{{/if}}
+
+  </div>
+</nav>

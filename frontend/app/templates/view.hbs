@@ -1,0 +1,21 @@
+<Jumbo>
+  <h2>{{@model.recipe.fields.recipeName}}</h2>
+  <h3>Description: {{@model.recipe.fields.description}}</h3>
+</Jumbo>
+<hr>
+<h2>Ingredients:</h2>
+<ul class="ingredients" style="padding-left:25px">
+  {{#each @model.ingredients as |ing|}}
+    <li ><h3>{{ing.fields.ingredient}} - {{ing.fields.amount}} {{ing.fields.unit}}</h3></li>
+  {{/each}}
+</ul>
+<hr>
+<h2 style="word-wrap: break-word;">Directions: </h2>
+<h3>{{@model.recipe.fields.directions}}</h3>
+<hr>
+<h2>Reviews:</h2>
+<ul class="reviews" style="padding-left:25px">
+  {{#each @model.reviews as |ing|}}
+    <li ><h3>{{ing.fields.recipeReview}} - {{ing.fields.recipeRating}}/5 stars</h3></li>
+  {{/each}}
+</ul>

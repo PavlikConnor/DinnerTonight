@@ -1,0 +1,15 @@
+<article class="recipe">
+  <div class="details">
+    <h2>
+      <!-- <LinkTo @route="recipe.view" @model={{@recipe}}
+        class="menu-find-dinner">{{@recipe.fields.recipeName}}
+      </LinkTo> -->
+      <a href="/recipe/{{@recipe.pk}}"
+        class="menu-find-dinner">{{@recipe.fields.recipeName}}
+      </a>
+    </h2>
+    <div class="recipe description">
+      <span>Description:</span> {{@recipe.fields.description}}
+    </div>
+  </div>
+</article>
