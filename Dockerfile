@@ -21,3 +21,4 @@ RUN pip install django-filter==1.1
 RUN pip install psycopg2-binary
 RUN pip install requests
 RUN pip install gunicorn==19.6.0
+RUN pip install bleach

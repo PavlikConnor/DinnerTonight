@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     #just api in production...
     'api',
     'rest_framework',
+    'bleach'
     #'axes',
 ]
 

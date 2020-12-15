@@ -40,6 +40,8 @@ import json, datetime, pytz
 from django.core import serializers
 import requests
 
+import json
+import bleach
 
 def home(request):
    """
@@ -60,14 +62,21 @@ class Register(APIView):
 
     def post(self, request, *args, **kwargs):
         # Login
-        username = request.POST.get('username') #you need to apply validators to these
-        password = request.POST.get('password') #you need to apply validators to these
-        email = request.POST.get('email') #you need to apply validators to these
-        gender = request.POST.get('gender') #you need to apply validators to these
-        age = request.POST.get('age') #you need to apply validators to these
-        educationlevel = request.POST.get('educationlevel') #you need to apply validators to these
-        city = request.POST.get('city') #you need to apply validators to these
-        state = request.POST.get('state') #you need to apply validators to these
+        usernameBleach = bleach.clean(request.data.get('username'))
+        passwordBleach = bleach.clean(request.data.get('password'))
+        emailBleach = bleach.clean(request.data.get('email'))
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+
+        if username != usernameBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if password != passwordBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if email != emailBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
 
         if User.objects.filter(username=username).exists():
             return Response({'username': 'Username is taken.', 'status': 'error'})
@@ -76,10 +85,10 @@ class Register(APIView):
 
         #especially before you pass them in here
         newuser = User.objects.create_user(email=email, username=username, password=password)
-        newprofile = Profile(user=newuser, gender=gender, age=age, educationlevel=educationlevel, city=city, state=state)
-        newprofile.save()
+        #newprofile = Profile(user=newuser)
+        #newprofile.save()
 
-        return Response({'status': 'success', 'userid': newuser.id, 'profile': newprofile.id})
+        return Response({'status': 'success', 'userid': newuser.id, 'username': newuser.username})
 
 class Session(APIView):
     permission_classes = (AllowAny,)
@@ -102,8 +111,8 @@ class Session(APIView):
 
     def post(self, request, *args, **kwargs):
         # Login
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.data.get('username')
+        password = request.data.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
@@ -117,39 +126,165 @@ class Session(APIView):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class Events(APIView):
+class HomePageRecipe(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
     def get(self, request, format=None):
-        events = Event.objects.all()
-        json_data = serializers.serialize('json', events)
-        content = {'events': json_data}
+        recipes = Recipe.objects.order_by('-addedDate')[:5]
+        json_data = serializers.serialize('json', recipes)
+        content = {'recipes': json_data}
         return HttpResponse(json_data, content_type='json')
 
+class RecipeIngredientsForRecipe(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, id):
+        print(id)
+        if not Recipe.objects.filter(id=id).exists():
+            return Response({'recipe': 'Recipe does not exist.', 'status': 'error'})
+        ingredients = RecipeIngredients.objects.filter(recipe__id=id)
+        json_data = serializers.serialize('json', ingredients)
+        return HttpResponse(json_data, content_type='json')
+
+class IngredientsForRecipe(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, id):
+        if not Recipe.objects.filter(id=id).exists():
+            return Response({'recipe': 'Recipe does not exist.', 'status': 'error'})
+        recIngredients = RecipeIngredients.objects.filter(recipe__id=id)
+        ingIds = []
+        for recIng in recIngredients:
+            ingIds.append(recIng.ingredient.id)
+        ings = Ingredient.objects.filter(id__in=ingIds)
+        json_data = serializers.serialize('json', ings)
+        return HttpResponse(json_data, content_type='json')
+
+class ReviewsForRecipies(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, id):
+        if not Recipe.objects.filter(id=id).exists():
+            return Response({'recipe': 'Recipe does not exist.', 'status': 'error'})
+        recReviews = RecipeReview.objects.filter(recipe__id=id)
+        json_data = serializers.serialize('json', recReviews)
+        return HttpResponse(json_data, content_type='json')
+
+
+class RecipeViewing(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, id):
+        if not Recipe.objects.filter(id=id).exists():
+            return Response({'recipe': 'Recipe does not exist.', 'status': 'error'})
+        recipe = Recipe.objects.filter(id=id).first()
+        json_data = serializers.serialize('json', [recipe,])
+        content = {'recipe': json_data}
+        return HttpResponse(json_data, content_type='json')
+
+class ReviewManagement(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
     def post(self, request, *args, **kwargs):
-        # print 'REQUEST DATA'
-        # print str(request.data)
+        recipeReviewBleach = bleach.clean(request.data.get('recipeReview'))
+        id = request.data.get('recipeId')
+        recipeReview = request.data.get('recipeReview')
+        recipeRating = request.data.get('recipeRating')
 
-        eventtype = request.data.get('eventtype')
-        timestamp = int(request.data.get('timestamp'))
-        userid = request.data.get('userid')
-        requestor = request.META['REMOTE_ADDR']
+        if recipeReview != recipeReviewBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
 
-        newEvent = Event(
-            eventtype=eventtype,
-            timestamp=datetime.datetime.fromtimestamp(timestamp/1000, pytz.utc),
-            userid=userid,
-            requestor=requestor
+        if recipeRating > 5:
+            return Response({'success': False, 'message': 'Rating must be from 0 to 5'}, status=status.HTTP_400_BAD_REQUEST)
+        if recipeRating < 0:
+            return Response({'success': False, 'message': 'Rating must be from 0 to 5'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(''.join(recipeReview)) == 0:
+            return Response({'success': False, 'message': 'Review must be greater than 0 characters'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not Recipe.objects.filter(id=id).exists():
+            return Response({'recipe': 'Recipe does not exist.', 'status': 'error'})
+
+        newRecipeReview = RecipeReview(
+            recipe = Recipe.objects.filter(id=id).first(),
+            recipeReview = recipeReview,
+            recipeRating = recipeRating,
+            userid = request.user.id
         )
 
         try:
-            newEvent.clean_fields()
+            newRecipeReview.clean_fields()
         except ValidationError as e:
-            print(e)
             return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
 
-        newEvent.save()
-        print ('New Event Logged from: ' + requestor)
+        newRecipeReview.save()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class RecipeManagement(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def post(self, request, *args, **kwargs):
+        recipeNameBleach = bleach.clean(request.data.get('recipeName'))
+        descriptionBleach = bleach.clean(request.data.get('description'))
+        directionsBleach = bleach.clean(request.data.get('directions'))
+        recipeName = request.data.get('recipeName')
+        description = request.data.get('description')
+        directions = request.data.get('directions')
+
+        ingredients = request.data.get('ingredients')
+        print(ingredients)
+        if recipeName != recipeNameBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if description != descriptionBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if directions != directionsBleach:
+            return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if ingredients.count == 0:
+            return Response({'success': False, 'message': 'Must have at least one ingredient'}, status=status.HTTP_400_BAD_REQUEST)
+
+        newRecipe = Recipe(
+            recipeName = recipeName,
+            description = description,
+            directions = directions,
+            userid = request.user.id
+        )
+
+        try:
+            newRecipe.clean_fields()
+        except ValidationError as e:
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newRecipe.save()
+
+        for ingredient in ingredients:
+            print(ingredient)
+            if not Ingredient.objects.filter(ingredientName=ingredient['ingredientName']).exists():
+                newIng = Ingredient(
+                    ingredientName = ingredient['ingredientName']
+                )
+                newIng.save()
+            newRecipeIng = RecipeIngredients(
+                recipe =  newRecipe,
+                ingredient = Ingredient.objects.filter(ingredientName=ingredient['ingredientName']).first(),
+                amount = ingredient['amount'],
+                unit = ingredient['unit']
+            )
+            newRecipeIng.save()
         return Response({'success': True}, status=status.HTTP_200_OK)
