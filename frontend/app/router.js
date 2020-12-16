@@ -12,7 +12,8 @@ Router.map(function() {
   this.route('recipe', function(){
     this.route('view', {path: '/:pk'});
   });
-   this.route('view', {path: 'recipe/:pk'});
-   this.route('login');
+  this.route('view', {path: 'recipe/:pk'});
+  this.route('login'); 
   this.route('test');
+  this.route('register');
 });

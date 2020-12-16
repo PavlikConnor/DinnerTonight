@@ -6,3 +6,12 @@
     AND building Ember applications.
   </p>
 </Jumbo>
+<input type='text' id='ingredient' value={{ingredient}}/>
+<input type='button' value='Add ingredient to list' id='add' {{action "another"}}/>
+
+<ul id='list'>
+  {{ingredients}}
+  <!-- {{#each ingredients as |ing|}}
+    <li><span>{{ing}}</span></li>
+  {{/each}} -->
+</ul>

@@ -1,8 +1,22 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:300,300italic,400,700,700italic);
+/* @import url(https://fonts.googleapis.com/css?family=Lato:300,300italic,400,700,700italic);
 
-/**
- * Base Elements
- */
+*/
+@import url(https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css);
+.container {
+  min-height: 100vh;
+  background: #f9f9f9;
+  margin: 0 auto;
+}
+
+.center{
+  text-align: center;
+}
+
+.btn-300{
+  width: 300px;
+}
+
+/*
 
 * {
   margin: 0;
@@ -43,9 +57,6 @@ p {
   margin-bottom: 15px;
 }
 
-/**
- * Button
- */
 
 .button {
   padding: 10px 30px 10px;
@@ -63,19 +74,12 @@ p {
 .button:hover {
   opacity: 1;
 }
-/**
- * Body Container
- */
 
 .container {
-  /*max-width: 1024px;*/
   min-height: 100vh;
   background: #f9f9f9;
   margin: 0 auto;
 }
-/**
- * Top Navigation
- */
 
 .menu {
   height: 4em;
@@ -186,16 +190,10 @@ p {
 .menu .results li:hover {
   background: #f3f3f3;
 }
-/**
- * Content Area
- */
 
 .body {
   padding: 15px;
 }
-/**
- * Similar to Jumbotron
- */
 
 .jumbo {
   padding: 50px;
@@ -426,10 +424,6 @@ p {
   }
 }
 
-  */
-/**
- * Utilities
- */
 
 .light {
   font-weight: 300;
@@ -452,7 +446,7 @@ p {
 }
 
 .tomster {
-  /*background: url(../assets/images/teaching-tomster.png);*/
+
   background-size: contain;
   background-repeat: no-repeat;
   height: 200px;
@@ -468,4 +462,4 @@ p {
   clip: rect(0 0 0 0);
   height: 1px; width: 1px;
   margin: -1px; padding: 0; border: 0;
-}
+} */

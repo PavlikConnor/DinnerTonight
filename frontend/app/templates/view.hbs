@@ -1,4 +1,5 @@
-<Jumbo>
+
+  <Jumbo>
   <h2>{{@model.recipe.fields.recipeName}}</h2>
   <h3>Description: {{@model.recipe.fields.description}}</h3>
 </Jumbo>
@@ -6,16 +7,48 @@
 <h2>Ingredients:</h2>
 <ul class="ingredients" style="padding-left:25px">
   {{#each @model.ingredients as |ing|}}
-    <li ><h3>{{ing.fields.ingredient}} - {{ing.fields.amount}} {{ing.fields.unit}}</h3></li>
+    <li ><h5>{{ing.fields.ingredient}} - {{ing.fields.amount}} {{ing.fields.unit}}</h5></li>
   {{/each}}
 </ul>
+<br/>
 <hr>
 <h2 style="word-wrap: break-word;">Directions: </h2>
-<h3>{{@model.recipe.fields.directions}}</h3>
+<h5>{{@model.recipe.fields.directions}}</h5>
+<br/>
 <hr>
 <h2>Reviews:</h2>
 <ul class="reviews" style="padding-left:25px">
   {{#each @model.reviews as |ing|}}
-    <li ><h3>{{ing.fields.recipeReview}} - {{ing.fields.recipeRating}}/5 stars</h3></li>
+    <li ><h5>{{ing.fields.recipeReview}} - {{ing.fields.recipeRating}}/5 stars</h5></li>
   {{/each}}
 </ul>
+<br/>
+<hr>
+<hr>
+<br/>
+{{#if auth.isLoggedIn}}
+<form {{action "submitReview" on="submit"}}>
+  <h2>Add Review:</h2>
+  <div class="control-group">
+    <div class="control-label">
+      <h5>Review</h5>
+    </div>
+
+    <div class="controls">
+      {{textarea value=review rows="4" cols="50"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">
+      <h5 style="float:left">Rating: {{rating}}</h5>
+    </div>
+
+    <div class="controls" style="max-width:550px">
+      {{input value=rating class="form-control-range" type="range" min="1" max="5" }}
+    </div>
+  </div>
+  <br>
+  <button type="submit" style="max-width:550px" class="btn btn-primary form-control">Submit Review</button>
+</form>
+{{/if}}

@@ -1,13 +1,13 @@
 <article class="recipe">
   <div class="details">
-    <h2>
+    <h4>
       <!-- <LinkTo @route="recipe.view" @model={{@recipe}}
         class="menu-find-dinner">{{@recipe.fields.recipeName}}
       </LinkTo> -->
       <a href="/recipe/{{@recipe.pk}}"
         class="menu-find-dinner">{{@recipe.fields.recipeName}}
       </a>
-    </h2>
+    </h4>
     <div class="recipe description">
       <span>Description:</span> {{@recipe.fields.description}}
     </div>

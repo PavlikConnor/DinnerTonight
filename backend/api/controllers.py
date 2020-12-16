@@ -132,7 +132,7 @@ class HomePageRecipe(APIView):
     renderer_classes = (renderers.JSONRenderer, )
 
     def get(self, request, format=None):
-        recipes = Recipe.objects.order_by('-addedDate')[:5]
+        recipes = Recipe.objects.order_by('-addedDate')[:10]
         json_data = serializers.serialize('json', recipes)
         content = {'recipes': json_data}
         return HttpResponse(json_data, content_type='json')
@@ -192,6 +192,59 @@ class RecipeViewing(APIView):
         content = {'recipe': json_data}
         return HttpResponse(json_data, content_type='json')
 
+class RecipeSearch(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def post(self, request, *args, **kwargs):
+        ingredients = str(request.data.get('ingredients'))
+        ingredientSplit = ingredients.split(',')
+        #print(ingredientSplit)
+        # ings = Ingredient.objects.filter(id__in=ingIds)
+        ings = Ingredient.objects.filter(ingredientName__in=ingredientSplit)
+        ingIds = []
+        for recIng in ings:
+            ingIds.append(recIng.id)
+        # print('ing')
+        # print(ings)
+        # print('ingIds')
+        # print(ingIds)
+        # if len(ingIds) == 0:
+        #     json_data = serializers.serialize('json', ingIds)
+        #     content = {'recipes': json_data}
+        #     return HttpResponse(content, content_type='json')
+        #else:
+        recipes = Recipe.objects.all()
+        recipesToReturn = []
+        for rec in recipes:
+            recipesIn = []
+            # print('rec.pk')
+            # print(rec.pk)
+            recipesIng = RecipeIngredients.objects.filter(recipe__id=rec.pk)
+            recipeFound = True
+            # print('recipesIng')
+            # print(recipesIng)
+            # print('recipeFound1')
+            # print(recipeFound)
+            for recIng in recipesIng:
+                # print('recIng.ingredient.pk')
+                # print(recIng.ingredient.pk)
+                if not recIng.ingredient.pk in ingIds:
+                    recipeFound = False
+                    # print('recipeFound2')
+                    # print(recipeFound)
+            if recipeFound == True and len(recipesIng) > 0:
+                recipesToReturn.append(rec.pk)
+        # print('recipesToReturn')
+        # print(recipesToReturn)
+        #recipes = RecipeIngredients.objects.select_related('recipe').all()#.recipe_set.all()
+        #.select_related('recipeIngredients__recipe').filter(recipe_id=id)
+        recipeReturn = Recipe.objects.filter(id__in=recipesToReturn)
+        json_data = serializers.serialize('json', recipeReturn)
+
+        return HttpResponse(json_data, content_type='json')
+
 class ReviewManagement(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (parsers.JSONParser,parsers.FormParser)
@@ -201,7 +254,7 @@ class ReviewManagement(APIView):
         recipeReviewBleach = bleach.clean(request.data.get('recipeReview'))
         id = request.data.get('recipeId')
         recipeReview = request.data.get('recipeReview')
-        recipeRating = request.data.get('recipeRating')
+        recipeRating = int(request.data.get('recipeRating'))
 
         if recipeReview != recipeReviewBleach:
             return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)

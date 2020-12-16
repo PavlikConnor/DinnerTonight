@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^homePageRecipe', csrf_exempt(controllers.HomePageRecipe.as_view())),
     url(r'^recipe/(?P<id>[0-9]+)$', csrf_exempt(controllers.RecipeViewing.as_view())),
     url(r'^recipe', csrf_exempt(controllers.RecipeManagement.as_view())),
+    url(r'^search', csrf_exempt(controllers.RecipeSearch.as_view())),
     url(r'^recIngredients/(?P<id>[0-9]+)$', csrf_exempt(controllers.RecipeIngredientsForRecipe.as_view())),
     url(r'^ingredients/(?P<id>[0-9]+)$', csrf_exempt(controllers.IngredientsForRecipe.as_view())),
     url(r'^reviews/(?P<id>[0-9]+)$', csrf_exempt(controllers.ReviewsForRecipies.as_view())),

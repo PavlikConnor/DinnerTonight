@@ -7,12 +7,41 @@ export default Ember.Service.extend({
 	//field vars
 	username: '',
 	password: '',
+	email: '',
 	errorMsg: '',
 
 	//stored data
 	user: null,
 	profile: null,
 	isLoggedIn: false,
+	register: function(){
+		console.log('Logging in:');
+
+		//retrieve field data
+		var username = this.get('username');
+		var password = this.get('password');
+		var email = this.get('email');
+		//var remember = this.get('remember');
+
+		var data = {
+			'username': username,
+			'password': password,
+			'email': email};
+		var auth = this;
+
+		//make api request
+		Ember.$.post('http://localhost/api/register', data, function(response){
+
+			if(response.status == 'success'){
+				auth.login();
+			} else{
+				//errors
+				console.log('Login POST Request to /api/register/ was unsuccessful.');
+				auth.set('errorMsg', response.data.message);
+			}
+		});
+
+	},
 	login: function(){
 		console.log('Logging in:');
 

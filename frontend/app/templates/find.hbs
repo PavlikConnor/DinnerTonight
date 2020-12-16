@@ -1,8 +1,22 @@
 <Jumbo>
   <h2>Find Dinner Tonight</h2>
   <p>
-    The Super Rentals website is a delightful project created to explore Ember.
-    By building a property rental site, we can simultaneously imagine traveling
-    AND building Ember applications.
+    Enter ingredients that you have in your fridge or pantry and we will find recipes that you can make without going to the store.
   </p>
 </Jumbo>
+
+<form>
+  <div class="form-group">
+    <label>Enter ingredients you have to search for a recipe</label>
+    <div class="input-group mb-3">
+    <input type='text' class="form-control" id='ingredient' value={{ingredient}} placeholder="Ingredient Name" aria-label="Ingredient Name" aria-describedby="button-another"/>
+    <div class="input-group-append">
+      <input type='button' class="btn btn-success form-control" value='Add ingredient to list' id="button-another" {{action "another"}}/>      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Currently Entered: {{ingredients}}</label>
+  </div>
+  <hr>
+  <input type='button' class="btn btn-primary form-control btn-300" value='Search with entered ingredients' {{action "search"}}/>
+</form>

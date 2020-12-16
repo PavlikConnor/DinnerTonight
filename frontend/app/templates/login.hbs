@@ -1,37 +1,27 @@
 <Jumbo>
-  <h2>Welcome to Dinner Tonight!</h2>
-  <h3>Log in to manage recipes</h3>
+  <h2>Welcome back to Dinner Tonight!</h2>
+  <p>Log in to manage recipes</p>
 </Jumbo>
-<form class="form-horizontal" {{action "login" on="submit"}}>
-  <div class="control-group">
-    <div class="control-label">
+<form {{action "login" on="submit"}}>
+  <div class="form-group">
+    <div>
       <label>Username</label>
     </div>
 
-    <div class="controls">
-      {{input value=auth.username type="text"}}
+    <div>
+      {{input class="form-control" placeholder="Username" value=auth.username type="text"}}
     </div>
   </div>
 
-  <div class="control-group">
-    <div class="control-label">
+  <div class="form-group">
+    <div>
       <label>Password</label>
     </div>
 
-    <div class="controls">
-      {{input value=auth.password type="password"}}
+    <div>
+      {{input class="form-control" placeholder="Password" value=auth.password type="password"}}
     </div>
   </div>
 
-  <button type="submit" class="btn">Log in!</button>
+  <button type="submit" class="btn btn-primary form-control">Log in!</button>
 </form>
-<!-- <form {{on "submit" this.authenticate}}>
-  <label for="identification">Login</label>
-  <input id='identification' placeholder="Enter Login" value={{this.identification}} {{on "change" this.updateIdentification}}>
-  <label for="password">Password</label>
-  <input id='password' placeholder="Enter Password" value={{this.password}} {{on "change" this.updatePassword}}>
-  <button type="submit">Login</button>
-  {{#if this.errorMessage}}
-    <p>{{this.errorMessage}}</p>
-  {{/if}}
-</form> -->

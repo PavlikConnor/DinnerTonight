@@ -14,5 +14,9 @@ export default Ember.Route.extend({
     recIngredients.forEach(x => x.fields.ingredient = ingredients.find(y => y.pk == x.fields.ingredient).fields.ingredientName);
     console.log({"recipe":recipe,"ingredients":recIngredients,"reviews":reviews});
     return {"recipe":recipe,"ingredients":recIngredients,"reviews":reviews};
+  },
+  setupController(controller, model) {
+    this._super(...arguments);
+    controller.set('pk', model.recipe.pk);
   }
 });
