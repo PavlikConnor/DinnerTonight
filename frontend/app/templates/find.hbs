@@ -19,4 +19,20 @@
   </div>
   <hr>
   <input type='button' class="btn btn-primary form-control btn-300" value='Search with entered ingredients' {{action "search"}}/>
+  <input type='button' class="btn btn-warning form-control btn-300" value='Clear entered ingredients' {{action "clear"}}/>
 </form>
+<hr>
+<br>
+{{#if noresults}}
+<h3 style="color:red">No Results for entered ingredients</h3>
+{{/if}}
+{{#if recipes.[0]}}
+<h3>Recipes you can make:</h3>
+<br>
+<ul>
+  {{#each recipes as |recipe|}}
+    <li><Recipe @recipe={{recipe}} /></li>
+    <hr>
+  {{/each}}
+</ul>
+{{/if}}

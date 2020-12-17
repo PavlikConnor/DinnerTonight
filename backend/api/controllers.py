@@ -31,7 +31,7 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import *
 from rest_framework.decorators import *
 from rest_framework.authentication import *
-
+from django.db.models.functions import Lower
 #filters
 #from filters.mixins import *
 
@@ -199,22 +199,14 @@ class RecipeSearch(APIView):
 
     def post(self, request, *args, **kwargs):
         ingredients = str(request.data.get('ingredients'))
-        ingredientSplit = ingredients.split(',')
-        #print(ingredientSplit)
+        ingredientSplit = ingredients.split(', ')
+        lowerList = [x.lower() for x in ingredientSplit]
+        print(len(ingredientSplit))
         # ings = Ingredient.objects.filter(id__in=ingIds)
-        ings = Ingredient.objects.filter(ingredientName__in=ingredientSplit)
+        ings = Ingredient.objects.filter(ingredientName__iregex=r'(' + '|'.join(lowerList) + ')')
         ingIds = []
         for recIng in ings:
             ingIds.append(recIng.id)
-        # print('ing')
-        # print(ings)
-        # print('ingIds')
-        # print(ingIds)
-        # if len(ingIds) == 0:
-        #     json_data = serializers.serialize('json', ingIds)
-        #     content = {'recipes': json_data}
-        #     return HttpResponse(content, content_type='json')
-        #else:
         recipes = Recipe.objects.all()
         recipesToReturn = []
         for rec in recipes:
@@ -234,7 +226,7 @@ class RecipeSearch(APIView):
                     recipeFound = False
                     # print('recipeFound2')
                     # print(recipeFound)
-            if recipeFound == True and len(recipesIng) > 0:
+            if recipeFound == True and len(recipesIng) > 0 and lowerList[0] != '':
                 recipesToReturn.append(rec.pk)
         # print('recipesToReturn')
         # print(recipesToReturn)
@@ -291,6 +283,7 @@ class RecipeManagement(APIView):
     renderer_classes = (renderers.JSONRenderer, )
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         recipeNameBleach = bleach.clean(request.data.get('recipeName'))
         descriptionBleach = bleach.clean(request.data.get('description'))
         directionsBleach = bleach.clean(request.data.get('directions'))
@@ -309,7 +302,7 @@ class RecipeManagement(APIView):
         if directions != directionsBleach:
             return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if ingredients.count == 0:
+        if len(ingredients) == 0:
             return Response({'success': False, 'message': 'Must have at least one ingredient'}, status=status.HTTP_400_BAD_REQUEST)
 
         newRecipe = Recipe(
@@ -326,6 +319,8 @@ class RecipeManagement(APIView):
 
         newRecipe.save()
 
+        print('ingredients')
+        print(ingredients)
         for ingredient in ingredients:
             print(ingredient)
             if not Ingredient.objects.filter(ingredientName=ingredient['ingredientName']).exists():
@@ -340,4 +335,4 @@ class RecipeManagement(APIView):
                 unit = ingredient['unit']
             )
             newRecipeIng.save()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'success': True, 'id':newRecipe.pk}, status=status.HTTP_200_OK)
