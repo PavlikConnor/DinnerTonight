@@ -11,7 +11,7 @@ cd <path to backend directory>
 docker-compose build
 docker-compose up
 ```
-
+ 
 In a Separate Terminal:
 ```
 docker-compose run django bash
