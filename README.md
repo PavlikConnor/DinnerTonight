@@ -11,7 +11,7 @@ cd <path to backend directory>
 docker-compose build
 docker-compose up
 ```
-Access frontend from http://localhost/frontend/
+
 In a Separate Terminal:
 ```
 docker-compose run django bash
@@ -20,6 +20,8 @@ docker-compose run django bash
 python manage.py createsuperuser --username admin --email admin
 exit
 ```
+
+Access frontend from http://localhost/frontend/
 
 ## User Stories
 1. As an hungry human, I want to search with ingredients that I have so I can quickly find a meal option with the ingredients that I already have available.
