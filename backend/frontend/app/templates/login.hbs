@@ -1,0 +1,27 @@
+<Jumbo>
+  <h2>Welcome back to Dinner Tonight!</h2>
+  <p>Log in to manage recipes</p>
+</Jumbo>
+<form {{action "login" on="submit"}}>
+  <div class="form-group">
+    <div>
+      <label>Username</label>
+    </div>
+
+    <div>
+      {{input class="form-control" placeholder="Username" value=auth.username type="text"}}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div>
+      <label>Password</label>
+    </div>
+
+    <div>
+      {{input class="form-control" placeholder="Password" value=auth.password type="password"}}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary form-control">Log in!</button>
+</form>

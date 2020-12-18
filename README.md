@@ -2,7 +2,7 @@
 This project will attract users by giving them the ability to search for recipes based on the ingredients they already have at home, possibly saving a trip to the grocery store! It will entice them with mouth watering meal descriptions and images. Additionally, they can create their own profile full of saved menu options and leave reviews and comment for any future recipe search.
 
 ## Installation
-* First install python, pip. and docker.
+* First install docker.
 * git clone https://github.com/ConnorPavlik/DinnerTonight
 
 ## Getting Started
@@ -11,6 +11,7 @@ cd <path to backend directory>
 docker-compose build
 docker-compose up
 ```
+Access frontend from http://localhost/frontend/
 In a Separate Terminal:
 ```
 docker-compose run django bash
@@ -21,24 +22,20 @@ exit
 ```
 
 ## User Stories
-1. As an interested user, I want to search the recipe database with my key words so I can quickly find a meal option with the ingredients that I already have available.
+1. As an hungry human, I want to search with ingredients that I have so I can quickly find a meal option with the ingredients that I already have available.
 
   - AC: search option must allow for up to 6 ingredients to be entered. Recipe search must result in options containing all of the entered items.
 
-2. As an interested user, I want to give my review/comments on the recipes I have made so I can help future users with picking an option.
+2. As an hungry human, I want to give my review/comments on the recipes I have made so I can help future users with picking an option.
 
-  - AC: allow users to rate, write reviews and like/dislike recipes in the database. Allow all user to view this.
+  - AC: allow users to rate, write reviews recipes in the database. Allow all user to view this.
 
 3. As an admin, I want to review flagged reviews for inappropriate or malicious content so that I can keep the site clean and user friendly.
 
   - AC: Allow admins to delete or make a review 'reviewed' if acceptable.
 
 ## Mis-User Stories  
-1. As a misuser, I want to access other users favorited lists so I can make fun of their choices.
-
-  - Mitigation: Using logon user and pass with sessions
-
-2. As a misuser, I want to write inappropriate or malicious text or post images that are not related to the recipe so that I lower the respect people have for DinnerTonight.
+1. As a troll, I want to write inappropriate or malicious text or post images that are not related to the recipe so that I lower the respect people have for DinnerTonight.
 
   - Mitigation: Other users can flag reviews to be reviewed by admins where the comment/review is scanned for malicious wording or imaging.
 

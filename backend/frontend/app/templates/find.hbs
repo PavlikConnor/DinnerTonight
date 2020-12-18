@@ -1,0 +1,44 @@
+<Jumbo>
+  <h2>Find Dinner Tonight</h2>
+  <p>
+    Enter ingredients that you have in your fridge or pantry and we will find recipes that you can make without going to the store.
+  </p>
+</Jumbo>
+
+<form>
+  <div class="form-group">
+    <label>Enter individual ingredients you have to search for a recipe</label>
+
+    <div class="input-group mb-3">
+
+        {{input action="another" type='text' class="form-control" id='ingredient' value=ingredient placeholder="Ingredient Name" aria-label="Ingredient Name" aria-describedby="button-another"}}
+        <div class="input-group-append">
+          <input type='submit' class="btn btn-success form-control" value='Add ingredient to list' id="button-another" {{action "another"}}/>
+        </div>
+
+    </div>
+
+  </div>
+  <div class="form-group">
+    <label>Currently Entered: {{ingredients}}</label>
+  </div>
+  <hr>
+  </form>
+  <input type='button' class="btn btn-primary form-control btn-300" value='Search with entered ingredients' {{action "search"}}/>
+  <input type='button' class="btn btn-warning form-control btn-300" value='Clear entered ingredients' {{action "clear"}}/>
+
+<hr>
+<br>
+{{#if noresults}}
+<h3 style="color:red">No Results for entered ingredients</h3>
+{{/if}}
+{{#if recipes.[0]}}
+<h3>Recipes you can make:</h3>
+<br>
+<ul>
+  {{#each recipes as |recipe|}}
+    <li><Recipe @recipe={{recipe}} /></li>
+    <hr>
+  {{/each}}
+</ul>
+{{/if}}

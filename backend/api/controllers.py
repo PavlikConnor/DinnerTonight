@@ -11,6 +11,7 @@ from rest_framework import status
 #from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django_filters.rest_framework import DjangoFilterBackend
+from django.core.validators import validate_email
 
 
 from django.shortcuts import *
@@ -34,7 +35,6 @@ from rest_framework.authentication import *
 from django.db.models.functions import Lower
 #filters
 #from filters.mixins import *
-
 from api.pagination import *
 import json, datetime, pytz
 from django.core import serializers
@@ -68,7 +68,7 @@ class Register(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         email = request.data.get('email')
-
+        # check for xss attacks
         if username != usernameBleach:
             return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -77,7 +77,10 @@ class Register(APIView):
 
         if email != emailBleach:
             return Response({'success': False, 'message': 'Potential XSS attack detected'}, status=status.HTTP_400_BAD_REQUEST)
-
+        try:
+            validate_email(email)
+        except ValidationError:
+            return Response({'email': 'Email is not valid.', 'status': 'error'})
         if User.objects.filter(username=username).exists():
             return Response({'username': 'Username is taken.', 'status': 'error'})
         elif User.objects.filter(email=email).exists():
@@ -148,6 +151,18 @@ class RecipeIngredientsForRecipe(APIView):
             return Response({'recipe': 'Recipe does not exist.', 'status': 'error'})
         ingredients = RecipeIngredients.objects.filter(recipe__id=id)
         json_data = serializers.serialize('json', ingredients)
+        return HttpResponse(json_data, content_type='json')
+
+class MyRecipes(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request):
+        id = request.user.id
+        recipes = Recipe.objects.filter(userid=id)
+        print(recipes)
+        json_data = serializers.serialize('json', recipes)
         return HttpResponse(json_data, content_type='json')
 
 class IngredientsForRecipe(APIView):
@@ -275,6 +290,21 @@ class ReviewManagement(APIView):
 
         newRecipeReview.save()
         return Response({'success': True}, status=status.HTTP_200_OK)
+
+class ReportReview(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def post(self, request, *args, **kwargs):
+        id = request.data.get('id')
+        if RecipeReview.objects.filter(id=id).exists():
+            review = RecipeReview.objects.filter(id=id).first()
+            review.flaggedForReview = True;
+            review.save();
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        else:
+            return Response({'success': False}, status=status.HTTP_200_OK)
 
 
 class RecipeManagement(APIView):

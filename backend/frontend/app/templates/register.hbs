@@ -1,0 +1,38 @@
+<Jumbo>
+  <h2>Register for  Dinner Tonight!</h2>
+  <p>Make a new account to manage recipes</p>
+</Jumbo>
+<form {{action "register" on="submit"}}>
+  <div class="form-group">
+    <div class="control-label">
+      <label>Email</label>
+    </div>
+
+    <div >
+      {{input class="form-control" placeholder="Email" value=auth.email type="text"}}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="control-label">
+      <label>Username</label>
+    </div>
+
+    <div>
+      {{input class="form-control" placeholder="Username" value=auth.username type="text"}}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="control-label">
+      <label>Password</label>
+    </div>
+
+    <div>
+      {{input class="form-control" placeholder="Password" value=auth.password type="password"}}
+    </div>
+  </div>
+
+
+  <button type="submit" class="btn btn-primary form-control">Register</button>
+</form>

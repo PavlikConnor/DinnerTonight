@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from api import views
 urlpatterns = [
+    #url(r'^frontend', views.frontend, name='frontend'),
     path('admin/', admin.site.urls),
 ]

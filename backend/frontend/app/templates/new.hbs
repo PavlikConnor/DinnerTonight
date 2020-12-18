@@ -1,0 +1,46 @@
+<Jumbo>
+  <h2>New Dinner Entry</h2>
+  <p>
+    Enter a new Recipe
+  </p>
+</Jumbo>
+
+  <div class="form-group">
+    <label>Recipe Name</label>
+    <input type='text' class="form-control" id='recipeName' value={{recipeName}} placeholder="Recipe Name"/>
+  </div>
+  <div class="form-group">
+    <label>Recipe Description</label>
+    <input type='text' class="form-control" id='recipeDescription' value={{recipeDescription}} placeholder="Recipe Description"/>
+  </div>
+  <div class="form-group">
+    <label>Recipe Directions</label>
+    <textarea type='text' rows=4 class="form-control" id='recipeDirections' value={{recipeDirections}} placeholder="Recipe Directions"/>
+  </div>
+  <form>
+  <div class="form-group">
+    <label>Enter individual ingredients for your recipe</label>
+    <div class="input-group mb-3">
+    <input type='text' class="form-control" id='ingredient' value={{ingredient}} placeholder="Ingredient Name" aria-label="Ingredient Name" aria-describedby="amount"/>
+    <div class="input-group-append">
+      <input type='number' class="form-control" id='amount' value={{amount}} placeholder="Ingredient Amount" aria-label="Ingredient Amount" aria-describedby="unit"/>
+      <input type='text' class="form-control" id='unit' value={{unit}} placeholder="Ingredient Unit" aria-label="Ingredient Unit" aria-describedby="button-another"/>
+      <input type='submit' class="btn btn-success form-control" value='Add ingredient to list' id="button-another" {{action "another"}}/>      </div>
+    </div>
+    {{#if ingError}}
+    <h4 style="color:red">{{ingErrorMess}}</h4>
+    {{/if}}
+  </div>
+  <div class="form-group">
+    <label>Currently Entered: {{ingredients}}</label>
+  </div>
+  <hr>
+  </form>
+  <input type='button' class="btn btn-primary form-control btn-300" value='Submit' {{action "submit"}}/>
+  <input type='button' class="btn btn-warning form-control btn-300" value='Clear entered ingredients' {{action "clear"}}/>
+
+<hr>
+<br>
+{{#if subError}}
+<h3 style="color:red">{{subErrorMess}}</h3>
+{{/if}}

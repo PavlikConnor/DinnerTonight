@@ -20,5 +20,7 @@ urlpatterns = [
     url(r'^ingredients/(?P<id>[0-9]+)$', csrf_exempt(controllers.IngredientsForRecipe.as_view())),
     url(r'^reviews/(?P<id>[0-9]+)$', csrf_exempt(controllers.ReviewsForRecipies.as_view())),
     url(r'^reviews', csrf_exempt(controllers.ReviewManagement.as_view())),
+    url(r'^reportReview', csrf_exempt(controllers.ReportReview.as_view())),
+    url(r'^myRecipes', csrf_exempt(controllers.MyRecipes.as_view())),
     url(r'^', include(router.urls)),
 ]

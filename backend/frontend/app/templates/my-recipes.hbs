@@ -1,0 +1,14 @@
+<Jumbo>
+  <h2>My Recipes</h2>
+  <p>Recipes you have added previously</p>
+</Jumbo>
+<ul class="results">
+  {{#if @model.[0]}}
+    {{#each @model as |recipe|}}
+      <li><Recipe @recipe={{recipe}} /></li>
+      <hr>
+    {{/each}}
+  {{else}}
+    <h3 style="color:red">No Results</h3>
+  {{/if}}
+</ul>
